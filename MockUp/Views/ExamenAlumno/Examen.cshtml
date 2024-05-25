@@ -1,0 +1,47 @@
+﻿@model MockUp.ViewModel.ExamenViewModel
+
+<body>
+    @{
+        int? currentIdPregunta = null; // Variable para rastrear el IdPregunta actual
+        List<string> respuestas = new List<string>(); // Lista para acumular respuestas
+    }
+
+    @foreach (var examen in Model.Examen)
+    {
+        if (examen.IdPregunta != currentIdPregunta)
+        {
+            if (currentIdPregunta != null)
+            {
+                // Mostrar respuestas acumuladas
+                <ul>
+                    @foreach (var respuesta in respuestas)
+                    {
+                        <li>@respuesta</li>
+                    }
+                </ul>
+                respuestas.Clear(); // Limpiar la lista para la siguiente pregunta
+            }
+
+            currentIdPregunta = examen.IdPregunta;
+
+            // Mostrar la nueva pregunta
+            <h1>@examen.DescPregunta</h1>
+        }
+
+        // Acumular la respuesta actual
+        respuestas.Add(examen.DescRespuesta);
+    }
+    @{
+        // Mostrar las respuestas para la última pregunta
+        if (currentIdPregunta != null && respuestas.Count > 0)
+        {
+            <ul>
+                @foreach (var respuesta in respuestas)
+                {
+                    <li>@respuesta</li>
+                }
+            </ul>
+        }
+    }
+   
+</body>

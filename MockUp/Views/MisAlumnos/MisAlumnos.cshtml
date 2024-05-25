@@ -1,0 +1,44 @@
+﻿@using MockUp.Models;
+@model IEnumerable<Class>;
+
+<!doctype html>
+<html>
+<body style="background-color: #cee4fc">
+    @Html.Partial("../_MiMenu")
+    @Html.Partial("../ChatBot")
+    <link rel="stylesheet" href="~/css/tabla.css">
+    <div class="contenedor">
+        <h2 class ="font-extrabold text-7xl"style= "margin: 10px 70px 70px; margin-top:50px">Mis Alumnos</h2>
+        <div class="table-wrapper">
+            <table class="fl-table">         
+                        <thead>
+                            <tr>
+                                <th>Nombre </th>
+                                <th>Apellido Paterno</th>
+                                <th>Apellido Materno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Nombre</td>
+                                    <td>@item.ApellidoPaterno</td>
+                                    <td>@item.ApellidoMaterno</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                </table>
+          </div>
+        
+    </div>
+    @section scripts {
+        <script src="@Url.Content("~/js/ChatBot/Chatbot.js")"></script>
+    }
+</body>
+</html>
+
+
+
+    
