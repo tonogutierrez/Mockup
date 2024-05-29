@@ -113,8 +113,7 @@ namespace FirebaseLoginAuth.Controllers
 
 					}
 
-					return RedirectToAction("MisAlumnos", "MisAlumnos"); //Cambiar esto
-                }
+					return RedirectToAction("Temas", "CuestionarioAlumnos");                 }
             }
             //si hay un error
             catch (FirebaseAuthException ex)
@@ -141,21 +140,25 @@ namespace FirebaseLoginAuth.Controllers
 
         //POST SignIn
         [HttpPost]
-        public async Task<IActionResult> SignIn(LoginModel loginModel)
+        public async Task<IActionResult> SignIn(SignInModel signInModel)
         {
             string tipo = "";
-			
-			try
+            if (!ModelState.IsValid)
+            {
+                return View(signInModel);
+            }
+
+            try
             {
                 //log in an existing user
                 var fbAuthLink = await auth
-                                .SignInWithEmailAndPasswordAsync(loginModel.Email, loginModel.Password);
+                                .SignInWithEmailAndPasswordAsync(signInModel.Email, signInModel.Password);
                 string token = fbAuthLink.FirebaseToken;
                 //save the token to a session variable
                 if (token != null)
                 {
                     HttpContext.Session.SetString("_UserToken", token);
-                    HttpContext.Session.SetString("_UserEmail", loginModel.Email); // Guardar el correo electrónico del usuario o profesor
+                    HttpContext.Session.SetString("_UserEmail", signInModel.Email); // Guardar el correo electrónico del usuario o profesor
 
                     //Base de datos
                     using (var connection = new SqlConnection(ConnectionHelper.GetConnectionString()))
@@ -168,7 +171,7 @@ namespace FirebaseLoginAuth.Controllers
 							command.CommandType = System.Data.CommandType.StoredProcedure;
 							command.Parameters.Add("@Correo", SqlDbType.VarChar);
 							//Poniendo valores
-							command.Parameters["@Correo"].Value = loginModel.Email;
+							command.Parameters["@Correo"].Value = signInModel.Email;
 
                             using (SqlDataReader reader = command.ExecuteReader())
                             {
@@ -189,7 +192,7 @@ namespace FirebaseLoginAuth.Controllers
 					}
                     else if(tipo == "Alumno")
                     {
-						return RedirectToAction("Cuestionario", "Cuestionario");
+						return RedirectToAction("Temas", "CuestionarioAlumnos");
 					}
                  
 					
@@ -199,8 +202,12 @@ namespace FirebaseLoginAuth.Controllers
             catch (FirebaseAuthException ex)
             {
                 var firebaseEx = JsonConvert.DeserializeObject<FirebaseError>(ex.ResponseData);
-                ModelState.AddModelError(String.Empty, firebaseEx.error.message);
-                return View(loginModel);
+                string customError = firebaseEx.error.message;
+
+                if (customError == "INVALID_LOGIN_CREDENTIALS") customError = "El correo o contraseña son incorrectos";
+
+                ModelState.AddModelError(String.Empty, customError);
+                return View(signInModel);
             }
 
             return View();

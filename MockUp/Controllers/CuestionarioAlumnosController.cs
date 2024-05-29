@@ -1,0 +1,40 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using MockUp.Models;
+using System.Data.SqlClient;
+using MockUp.Helper;
+namespace MockUp.Controllers
+{
+    public class CuestionarioAlumnosController : Controller
+    {
+        [Route("/Temas")]
+        public IActionResult Temas()
+        {
+            List<TemasModel> listTemas = new List<TemasModel>(); //lista de temas para el alumno
+            //conexcion a la base de datos
+            using(var connection = new SqlConnection(ConnectionHelper.GetConnectionString()))
+            {
+                connection.Open();
+                //Creo un procedimiento
+                using(var command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandText = "dbo.mostrarTemas"; //Obtengo el nombre del procedimiento
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    using (SqlDataReader reader = command.ExecuteReader()) //leo los datos
+                    {
+                        while (reader.Read())
+                        {
+                            Models.TemasModel temas = new Models.TemasModel();
+                            temas.IdTema = Convert.ToInt32(reader["IdTema"]);
+                            temas.Tema = reader["Tema"].ToString();//leo la columa de mi tabla 
+                            temas.LinkImagen = reader["LinkImagen"].ToString();
+                            listTemas.Add(temas);//se guarda en la lista
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return View(listTemas);
+        }
+    }
+}

@@ -5,46 +5,63 @@
 }
 
 <head>
-	<link rel="stylesheet" href="~/css/login.css">
+    <link rel="stylesheet" href="~/css/login.css">
 </head>
 
+<div class="wrapper">
+    <div class="logo">
+        <img src="~/imagenes/estrellarecortada.png" alt="Logo">
+    </div>
+    <div class="text-center mt-4 name">
+        Registro
+    </div>
+    <form class="p-3 mt-3" asp-action="Registration">
+        <div asp-validation-summary="ModelOnly" class="text-danger text-center" style="color:red"></div>
 
-<div class="box">
-	<form asp-action="Registration">
-		<span class="text-center">login</span>
-		<div asp-validation-summary="ModelOnly" class="text-danger" style="color:red"></div>
-		<div class="input-container">
-			<input asp-for="Email" type="text" required="" />
-			<label asp-for="Email">Correo</label>
-			<span asp-validation-for="Email" style="color:red;"></span>
-		</div>
-		<div class="input-container">
-			<input asp-for="Password" type="mail" required="" />
-			<label asp-for="Password">Contraseña</label>
-			<span asp-validation-for="Password" style="color:red;"></span>
-		</div>
-		<div class="input-container">
-			<input asp-for="Nombre" type="text" required="" />
-			<label asp-for="Nombre">Nombre</label>
-			<span asp-validation-for="Nombre" style="color:red;"></span>
-		</div>
-		<div class="input-container">
-			<input asp-for="ApellidoPaterno" type="text" required="" />
-			<label asp-for="ApellidoPaterno">Apellido Paterno</label>
-			<span asp-validation-for="ApellidoPaterno" style="color:red;"></span>
-		</div>
-		<div class="input-container">
-			<input asp-for="ApellidoMaterno" type="text" required="" />
-			<label asp-for="ApellidoMaterno">Apellido Materno</label>
-			<span asp-validation-for="ApellidoMaterno" style="color:red;"></span>
-		</div>
+        <div class="form-field d-flex align-items-center">
+            <span class="far fa-user"></span>
+            <input asp-for="Email" type="text" required placeholder="Correo" />
+            
+            <span asp-validation-for="Email" style="color:red;"></span>
+        </div>
 
-		<button type="submit" class="btn">Crear</button>
-		<button type="button" class="btn" onclick="document.location.href='SignIn';">SignIn</button>
-	</form>
+        <div class="form-field d-flex align-items-center">
+            <span class="fas fa-key"></span>
+            <input asp-for="Password" type="password" required placeholder="Contraseña" />
+            
+            <span asp-validation-for="Password" style="color:red;"></span>
+        </div>
 
+        <div class="form-field d-flex align-items-center">
+            <span class="far fa-user"></span>
+            <input asp-for="Nombre" type="text" required placeholder="Nombre" />
+            
+            <span asp-validation-for="Nombre" style="color:red;"></span>
+        </div>
+
+        <div class="form-field d-flex align-items-center">
+            <span class="far fa-user"></span>
+            <input asp-for="ApellidoPaterno" type="text" required placeholder="Apellido Paterno" />
+            
+            <span asp-validation-for="ApellidoPaterno" style="color:red;"></span>
+        </div>
+
+        <div class="form-field d-flex align-items-center">
+            <span class="far fa-user"></span>
+            <input asp-for="ApellidoMaterno" type="text" required placeholder="Apellido Materno" />
+            
+            <span asp-validation-for="ApellidoMaterno" style="color:red;"></span>
+        </div>
+
+        <button type="submit" class="btn mt-3">Crear</button>
+    </form>
+    <div class="text-center fs-6">
+        <a href="SignIn">Sign up</a>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
