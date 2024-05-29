@@ -3,12 +3,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    
-
 </head>
 
 <body style="background-color:#cee4fc">
-    @Html.Partial("../ChatBot")
     <nav class="bg-gray-800">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="relative flex h-16 items-center justify-between">
@@ -17,19 +14,9 @@
                     <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="absolute -inset-0.5"></span>
                         <span class="sr-only">Open main menu</span>
-                        <!--
-                          Icon when menu is closed.
-
-                          Menu open: "hidden", Menu closed: "block"
-                        -->
                         <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                         </svg>
-                        <!--
-                          Icon when menu is open.
-
-                          Menu open: "block", Menu closed: "hidden"
-                        -->
                         <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -41,8 +28,6 @@
                     </div>
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-4">
-                            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-
                             <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" onclick="window.location.href='@Url.Action("MisAlumnos", "MisAlumnos")'">Mis Alumnos</a>
                             <a href="#" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page" onclick="window.location='/Cuestionario'">Temas(Respuestas)</a>
                             <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Resultados</a>
@@ -58,8 +43,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                         </svg>
                     </button>
-
-                    <!-- Profile dropdown -->
                     <div class="relative ml-3">
                         <div>
                             <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
@@ -68,17 +51,6 @@
                                 <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
                             </button>
                         </div>
-
-                        <!--
-                          Dropdown menu, show/hide based on menu state.
-
-                          Entering: "transition ease-out duration-100"
-                            From: "transform opacity-0 scale-95"
-                            To: "transform opacity-100 scale-100"
-                          Leaving: "transition ease-in duration-75"
-                            From: "transform opacity-100 scale-100"
-                            To: "transform opacity-0 scale-95"
-                        -->
                         <div id="user-menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
@@ -88,12 +60,9 @@
                 </div>
             </div>
         </div>
-
-        <!-- Mobile menu, show/hide based on menu state. -->
         <div class="sm:hidden" id="mobile-menu">
             <div class="space-y-1 px-2 pb-3 pt-2">
-                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                <a href="#" class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium"onclick="window.location.href='@Url.Action("MisAlumnos", "MisAlumnos")'">MisAlumnos</a>
+                <a href="#" class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" onclick="window.location.href='@Url.Action("MisAlumnos", "MisAlumnos")'">MisAlumnos</a>
                 <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page" onclick="window.location='/Cuestionario'">Tema(Respuestas)</a>
                 <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Projects</a>
                 <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Calendar</a>
@@ -111,7 +80,6 @@
                 userMenu.classList.toggle('hidden');
             });
 
-            // Close the menu if the user clicks outside of it
             document.addEventListener('click', (event) => {
                 if (!menuButton.contains(event.target) && !userMenu.contains(event.target)) {
                     userMenu.classList.add('hidden');
@@ -120,61 +88,77 @@
             });
         });
     </script>
-    <!--FIN DEL MENU-->
-    <!--FIN DEL MENU-->
+    @Html.Partial("../ChatBot")
+    <link rel="stylesheet" href="~/css/tabla.css">
+    <link rel="stylesheet" href="~/css/modalDeSuccess.css">
 
-
-
-    <link rel="stylesheet" href="~/css/tabla.css"> 
-
-   
     <div class="contenedor">
-       <form method="post" action="@Url.Action("ModificarPreguntasYRespuestas", "ObservarRespuestas")">
-            <div class="mb-6"; style= " margin: 10px 70px 70px; margin-top:50px">
+        <form id="editForm" method="post" action="@Url.Action("ModificarPreguntasYRespuestas", "ObservarRespuestas")">
+            <div class="mb-6" style="margin: 10px 70px 70px; margin-top:50px">
                 <label for="validationCustom03" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Pregunta</label>
                 <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="@Model.DescPregunta" name="descPregunta" id="validationCustom03" placeholder="@Model.DescPregunta" required>
                 <input type="hidden" value="@Model.IdPregunta" name="idPregunta" />
                 <input type="hidden" value="@Model.IdPrueba" name="idPrueba" id="idPrueba" />
             </div>
-
-          <div class="column" style="background-color:#cee4fc;flex-grow: 1">
-                        @{
-                            int contador = 1;
-                        }
-                        
-                <div class="table-wrapper">
+            <div class="column" style="background-color:#cee4fc;flex-grow: 1">
+                @{
+                    int contador = 1;
+                }
+            <div class="table-wrapper">
                     <label for="validationCustom03" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Respuesta</label>
-                     <table class="fl-table">
-                                <thead>
-                                    <tr>
-                                        <th>Descripcion</th>
-                                        <th>Es correcta</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model.Respuestas)
-                                    {
-                                        <tr scope="row">
-                                            <td>
-                                                    <input type="text" value="@item.TextoOpcion" style="width:100%" name="respuesta@(contador)" />
-                                            </td>
-                                
-                                            <td>
-                                                    <input type="checkbox" value="1" @(item.EsCorrecta ? "checked" : "") name="respuestaCorrecta@(contador)" />
-                                            </td>
-                                        </tr>
-                                            contador++;
-                                    }
-                                </tbody>
-                     </table>
-                            <button type="submit" class="btn btn-success" style="float:right; margin-top: 20px;">Guardar</button>
+                    <table class="fl-table">
+                        <thead>
+                            <tr>
+                                <th>Descripcion</th>
+                                <th>Es correcta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Respuestas)
+                            {
+                                <tr scope="row">
+                                    <td>
+                                        <input type="text" value="@item.TextoOpcion" style="width:100%" name="respuesta@(contador)" />
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" value="1" @(item.EsCorrecta ? "checked" : "") name="respuestaCorrecta@(contador)" />
+                                    </td>
+                                </tr>
+                                contador++;
+                            }
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-success" style="float:right; margin-top: 20px;" onclick="openPopup()">Guardar</button>
+                    
+                        <div class="popup" id="popup">
+                            <img src="~/imagenes/404-tick.png" alt="Palomita de guardado">
+                            <h2>Listo</h2>
+                            <p>Se guardaron sus cambios</p>
+                            <button type="button" onclick="submitForm()">OK</button>
+                        </div>
+                               
                 
-                </div>
-          </div>
-       </form>
+            </div>
+        </form>
         @section scripts {
             <script src="@Url.Content("~/js/ChatBot/Chatbot.js")"></script>
         }
-                
     </div>
+
+    <script>
+        let popup = document.getElementById("popup");
+
+        function openPopup() {
+            popup.classList.add("open-popup");
+        }
+
+        function closePopup() {
+            popup.classList.remove("open-popup");
+        }
+
+        function submitForm() {
+            closePopup();
+            document.getElementById('editForm').submit();
+        }
+    </script>
 </body>

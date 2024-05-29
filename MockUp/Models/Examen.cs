@@ -6,6 +6,7 @@
         public string DescRespuesta { get; set; }
         public int IdPregunta { get; set; }
         public int IdOpcion { get; set; }
+        public bool EsCorrecta {  get; set; }
 
     }
 }

@@ -35,6 +35,8 @@ namespace MockUp.Controllers
                             examen.DescRespuesta = reader["DescRespuesta"].ToString();
                             examen.IdPregunta = Convert.ToInt32(reader["IdPregunta"]);
                             examen.IdOpcion = Convert.ToInt32(reader["IdOpcion"]);
+                            examen.EsCorrecta = reader.GetBoolean(reader.GetOrdinal("EsCorrecta"));
+
                             //Guardo el objeto a una lista
                             listaExamen.Add(examen);
                         }

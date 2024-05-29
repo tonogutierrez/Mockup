@@ -1,47 +1,88 @@
 ﻿@model MockUp.ViewModel.ExamenViewModel
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Examen</title>
+    <link rel="stylesheet" href="~/css/examen.css">
+</head>
 <body>
-    @{
-        int? currentIdPregunta = null; // Variable para rastrear el IdPregunta actual
-        List<string> respuestas = new List<string>(); // Lista para acumular respuestas
-    }
+    <header>
+        <h1>EXAMEN</h1>
+    </header>
 
-    @foreach (var examen in Model.Examen)
-    {
-        if (examen.IdPregunta != currentIdPregunta)
+    <div class="container">
+        @{
+            int? currentIdPregunta = null;
+            var correctas = new Dictionary<int, int>(); // Cambiado a diccionario para mapear preguntas y sus respuestas correctas
+        }
+
+        @foreach (var examen in Model.Examen)
         {
-            if (currentIdPregunta != null)
+            if (examen.IdPregunta != currentIdPregunta)
             {
-                // Mostrar respuestas acumuladas
-                <ul>
-                    @foreach (var respuesta in respuestas)
-                    {
-                        <li>@respuesta</li>
-                    }
-                </ul>
-                respuestas.Clear(); // Limpiar la lista para la siguiente pregunta
+                if (currentIdPregunta != null)
+                {
+                    @:</section>
+                }
+
+                currentIdPregunta = examen.IdPregunta;
+
+                @:<section id="p@examen.IdPregunta">
+                @:<h3>@examen.IdPregunta - @examen.DescPregunta</h3>
             }
 
-            currentIdPregunta = examen.IdPregunta;
-
-            // Mostrar la nueva pregunta
-            <h1>@examen.DescPregunta</h1>
+            @:<label class="opcion" data-pregunta="@examen.IdPregunta">
+            @:<input type='radio' value='@examen.IdOpcion' name='@examen.IdPregunta' data-correcta='@examen.EsCorrecta' onclick='respuesta(@examen.IdPregunta, this)' />@examen.DescRespuesta
+            @:</label>
+            
+            if (examen.EsCorrecta)
+            {
+                correctas[examen.IdPregunta] = examen.IdOpcion; // Almacena la respuesta correcta para cada pregunta
+            }
         }
 
-        // Acumular la respuesta actual
-        respuestas.Add(examen.DescRespuesta);
-    }
-    @{
-        // Mostrar las respuestas para la última pregunta
-        if (currentIdPregunta != null && respuestas.Count > 0)
+        @if (currentIdPregunta != null)
         {
-            <ul>
-                @foreach (var respuesta in respuestas)
-                {
-                    <li>@respuesta</li>
-                }
-            </ul>
+            @:</section>
         }
-    }
-   
+
+        <button onclick="corregir()">CORREGIR</button>
+        <h2>Cantidad acertadas: <span id="resultado"></span></h2>
+    </div>
+
+    <script>
+        let correctas = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(correctas));
+        let opcion_elegida = {};
+        let cantidad_correctas = 0;
+
+        function respuesta(num_pregunta, seleccionada) {
+            opcion_elegida[num_pregunta] = parseInt(seleccionada.value);
+
+            let id = "p" + num_pregunta;
+            let labels = document.getElementById(id).getElementsByTagName('label');
+            for (let i = 0; i < labels.length; i++) {
+                labels[i].style.backgroundColor = "white";
+            }
+
+            seleccionada.parentNode.style.backgroundColor = "#cec0fc";
+        }
+
+        function corregir() {
+            cantidad_correctas = 0;
+            for (let pregunta in opcion_elegida) {
+                if (opcion_elegida.hasOwnProperty(pregunta)) {
+                    let seleccionada = opcion_elegida[pregunta];
+                    if (correctas[pregunta] === seleccionada) { // Verificar con la respuesta correcta específica para cada pregunta
+                        cantidad_correctas++;
+                    }
+                }
+            }
+
+            document.getElementById("resultado").innerHTML = cantidad_correctas;
+        }
+    </script>
 </body>
+</html>

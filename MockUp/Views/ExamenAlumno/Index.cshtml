@@ -1,0 +1,34 @@
+﻿<!DOCTYPE <html lang="es">
+    <head>
+        <meta charset ="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Examen</title>
+        <link rel="stylesheet" href="estilo.css" />
+        
+    </head>
+    <body>
+        <header>
+            <h1>EXAMEN</h1>
+        </header>
+
+        <div class="container">
+            <section id="p1">
+                <h3>1 - ¿Cuál es la capital de Italia?</h3>
+                <label>
+                    <input type="radio" value="1" name="p0" onlick="respuesta(0,this)" />Turin
+                </label>
+                <label>
+
+                <input type="radio" value="2" name="p0" onlick="respuesta(0,this)" />Nápoles
+            </label>
+                <label>
+                <input type="radio" value="3" name="p0" onlick="respuesta(0,this)" />Roma
+            </label>
+            </section>
+            <button onclick="corregir()">CORREGIR</button>
+            <h2>Cantidad acertadas: <span id="resultado"</h2>
+        </div>
+
+       <script src="script.js"></script>
+    </body>
+</html>

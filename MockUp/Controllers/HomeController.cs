@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System.Data.SqlClient;
 using System.Reflection;
 using NuGet.Protocol.Plugins;
+using MockUp.Helper;
 
 
 namespace FirebaseLoginAuth.Controllers
@@ -21,7 +22,7 @@ namespace FirebaseLoginAuth.Controllers
     public class HomeController : Controller
     {
 
-		public const string ConnectionString = "Server=ANTONIO\\SQLEXPRESS;Database=videoJuego;Trusted_Connection=True;"; //mi path de base de datos
+		
 		FirebaseAuthProvider auth;
 
         public HomeController()
@@ -83,8 +84,9 @@ namespace FirebaseLoginAuth.Controllers
                 if (token != null)
                 {
                     HttpContext.Session.SetString("_UserToken", token);
+                    HttpContext.Session.SetString("_UserEmail", loginModel.Email); // Guardar el correo electrónico del usuario
 
-					using (var connection = new SqlConnection(ConnectionString))
+                    using (var connection = new SqlConnection(ConnectionHelper.GetConnectionString()))
 					{
 						connection.Open();
 
@@ -102,13 +104,16 @@ namespace FirebaseLoginAuth.Controllers
 							command.Parameters["@ApellidoPaterno"].Value = loginModel.ApellidoPaterno;
 							command.Parameters["@ApellidoMaterno"].Value = loginModel.ApellidoMaterno;
 							command.Parameters["@Correo"].Value = loginModel.Email;
-							//No espero Respuestas
-							command.ExecuteNonQuery();
-						}
+
+                           //No espero Respuestas
+                            command.ExecuteNonQuery();
+
+                            
+                        }
 
 					}
 
-					return RedirectToAction("MisAlumnos", "MisAlumnos");
+					return RedirectToAction("MisAlumnos", "MisAlumnos"); //Cambiar esto
                 }
             }
             //si hay un error
@@ -150,9 +155,10 @@ namespace FirebaseLoginAuth.Controllers
                 if (token != null)
                 {
                     HttpContext.Session.SetString("_UserToken", token);
+                    HttpContext.Session.SetString("_UserEmail", loginModel.Email); // Guardar el correo electrónico del usuario o profesor
 
                     //Base de datos
-					using (var connection = new SqlConnection(ConnectionString))
+                    using (var connection = new SqlConnection(ConnectionHelper.GetConnectionString()))
 					{
 						connection.Open();
 						using (var command = new SqlCommand())
