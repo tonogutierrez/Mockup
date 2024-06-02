@@ -1,5 +1,11 @@
 ﻿@using MockUp.Models
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _contx;
+@using Microsoft.AspNetCore.Http
 @model IEnumerable<TemasModel>
+
+@{
+    var userName = _contx.HttpContext.Session.GetString("_UserName");
+}
 
 <head>
     <meta charset="UTF-8">
@@ -101,26 +107,7 @@
             </div>
         </div>
     </nav>
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const menuButton = document.getElementById('user-menu-button');
-            const userMenu = document.getElementById('user-menu');
-
-            menuButton.addEventListener('click', () => {
-                const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
-                menuButton.setAttribute('aria-expanded', !isExpanded);
-                userMenu.classList.toggle('hidden');
-            });
-
-            // Close the menu if the user clicks outside of it
-            document.addEventListener('click', (event) => {
-                if (!menuButton.contains(event.target) && !userMenu.contains(event.target)) {
-                    userMenu.classList.add('hidden');
-                    menuButton.setAttribute('aria-expanded', 'false');
-                }
-            });
-        });
-    </script>
+    
     <!--FIN DEL MENU-->
     <!--FIN DEL MENU-->
 
@@ -129,6 +116,8 @@
         <div class="column" style="background-color:#cee4fc;flex-grow: 1">
 
             <div class="flex flex-wrap -m-3" style="max-width:90%;margin:0 auto ">
+                
+
 
                 @foreach (var item in Model)
                 {
@@ -137,7 +126,8 @@
                             <div class="bg-cover h-48" style="background: url(@item.LinkImagen); background-repeat:no-repeat;background-position:center"></div>
                             <div class="p-4 flex-1 flex flex-col" style="">
                                 <h3 class="mb-4 text-2xl">@item.Tema</h3>
-                                <div class="cta-container transition" onclick="window.location.href = '@Url.Action("PreguntasExamen", "PreguntasExamen", new { idTema = @item.IdTema, nombreTema = @item.Tema })'">
+                                <p class="mb-2">Calificación: @(item.Calificacion.HasValue ? item.Calificacion.Value.ToString() : "N/A")</p> <!-- Mostrar la calificación del tema -->
+                                <div class="cta-container transition" onclick="window.location.href = '@Url.Action("Examen", "ExamenAlumno", new { idTema = @item.IdTema})'">
                                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                                         Seleccionar
                                     </button>
@@ -154,6 +144,7 @@
    
     @section scripts {
         <script src="@Url.Content("~/js/ChatBot/Chatbot.js")"></script>
+        <script src="@Url.Content("~/js/Navegador/Navegador.js")"></script>
     }
 
 </body>

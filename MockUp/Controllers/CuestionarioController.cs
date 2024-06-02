@@ -13,6 +13,8 @@ namespace MockUp.Controllers
         [Route("/Cuestionario")]
         public IActionResult Cuestionario()
         {
+            string userCorreo = HttpContext.Session.GetString("_UserCorreo"); // Recupero el correo de la sesión
+            string userType = "Maestro"; // Tipo de usuario alumno
             List<Models.TemasModel> listaDeTemas = new List<Models.TemasModel>(); //estoy creando una lista de los temas 
             //conexion con la base de datos 
             using(var connection = new SqlConnection(ConnectionHelper.GetConnectionString()))
@@ -24,8 +26,10 @@ namespace MockUp.Controllers
                 {
                     command.Connection = connection;
                     command.CommandText = "dbo.mostrarTemas"; //obtengo el procedimiento con la funcion commandText
-                    command.CommandType = System.Data.CommandType.Text; //quiero que el commandtext sea texto
-                    using(SqlDataReader reader = command.ExecuteReader()) //leo los datos
+                    command.CommandType = System.Data.CommandType.StoredProcedure; //quiero que el commandtext sea texto
+                    command.Parameters.AddWithValue("@Correo", userCorreo);
+                    command.Parameters.AddWithValue("@UserType", userType);
+                    using (SqlDataReader reader = command.ExecuteReader()) //leo los datos
                     {
                         while (reader.Read())
                         {

@@ -2,6 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 //Add sessions
 builder.Services.AddSession(options =>
@@ -21,6 +22,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSession(); //uso de sesiones
+// Agregar el servicio IHttpContextAccessor
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

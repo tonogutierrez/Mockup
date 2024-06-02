@@ -1,12 +1,11 @@
-﻿@model MockUp.ViewModel.ExamenViewModel
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Examen</title>
     <link rel="stylesheet" href="~/css/examen.css">
+    <link rel="stylesheet" href="~/css/ModalWarning.css">
 </head>
 <body>
     <header>
@@ -16,7 +15,7 @@
     <div class="container">
         @{
             int? currentIdPregunta = null;
-            var correctas = new Dictionary<int, int>(); // Cambiado a diccionario para mapear preguntas y sus respuestas correctas
+            var correctas = new Dictionary<int, int>();
         }
 
         @foreach (var examen in Model.Examen)
@@ -25,6 +24,12 @@
             {
                 if (currentIdPregunta != null)
                 {
+                    @:<div>
+                        <label style="text-align:center; font-weight: bold;">Nivel de confianza:</label>
+                        <label><input type="radio" name="confianza_@currentIdPregunta" value="1" onclick="seleccionarConfianza(@currentIdPregunta, 1)" />Baja</label>
+                        <label><input type="radio" name="confianza_@currentIdPregunta" value="2" onclick="seleccionarConfianza(@currentIdPregunta, 2)" />Media</label>
+                        <label><input type="radio" name="confianza_@currentIdPregunta" value="3" onclick="seleccionarConfianza(@currentIdPregunta, 3)" />Alta</label>
+                    @:</div>
                     @:</section>
                 }
 
@@ -37,26 +42,45 @@
             @:<label class="opcion" data-pregunta="@examen.IdPregunta">
             @:<input type='radio' value='@examen.IdOpcion' name='@examen.IdPregunta' data-correcta='@examen.EsCorrecta' onclick='respuesta(@examen.IdPregunta, this)' />@examen.DescRespuesta
             @:</label>
-            
+
             if (examen.EsCorrecta)
             {
-                correctas[examen.IdPregunta] = examen.IdOpcion; // Almacena la respuesta correcta para cada pregunta
+                correctas[examen.IdPregunta] = examen.IdOpcion;
             }
         }
 
         @if (currentIdPregunta != null)
         {
+            @:<div>
+                <label style="text-align:center; font-weight: bold;">Nivel de confianza:</label>
+                <label><input type="radio" name="confianza_@currentIdPregunta" value="1" onclick="seleccionarConfianza(@currentIdPregunta, 1)" />Baja</label>
+                <label><input type="radio" name="confianza_@currentIdPregunta" value="2" onclick="seleccionarConfianza(@currentIdPregunta, 2)" />Media</label>
+                <label><input type="radio" name="confianza_@currentIdPregunta" value="3" onclick="seleccionarConfianza(@currentIdPregunta, 3)" />Alta</label>
+            @:</div>
             @:</section>
         }
 
-        <button onclick="corregir()">CORREGIR</button>
+        <button id="corregirBtn" onclick="mostrarModal()" style="margin: 10px 10%;">CORREGIR</button>
+        <button id="guardarRespuestasBtn" onclick="guardarRespuestas()" disabled style="margin: 10px 10%;">GUARDAR RESPUESTAS</button>
         <h2>Cantidad acertadas: <span id="resultado"></span></h2>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="popup">
+        
+        <img src="~/imagenes/warning.png" alt="Warning">
+        <h2>Confirmar Corrección</h2>
+        <p>¿Estás seguro de que deseas corregir las respuestas? No podrás modificar las respuestas después de esto.</p>
+        <button onclick="confirmarCorregir()">Sí, corregir</button>
+        <button class="cancel-btn" onclick="cerrarModal()">Cancelar</button>
     </div>
 
     <script>
         let correctas = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(correctas));
         let opcion_elegida = {};
+        let niveles_confianza = {};
         let cantidad_correctas = 0;
+        let userCorreo = "@ViewBag.UserCorreo";
 
         function respuesta(num_pregunta, seleccionada) {
             opcion_elegida[num_pregunta] = parseInt(seleccionada.value);
@@ -70,18 +94,79 @@
             seleccionada.parentNode.style.backgroundColor = "#cec0fc";
         }
 
+        function seleccionarConfianza(num_pregunta, confianza) {
+            niveles_confianza[num_pregunta] = confianza;
+        }
+
+        //Boton para abrir el modal
+        function mostrarModal() {
+            document.getElementById("myModal").classList.add("open-popup"); 
+        }
+        
+        //function para cerrar modal
+        function cerrarModal() {
+            document.getElementById("myModal").classList.remove("open-popup");
+        }
+
+        function confirmarCorregir() {
+            cerrarModal();
+            corregir();
+        }
+
         function corregir() {
             cantidad_correctas = 0;
             for (let pregunta in opcion_elegida) {
                 if (opcion_elegida.hasOwnProperty(pregunta)) {
                     let seleccionada = opcion_elegida[pregunta];
-                    if (correctas[pregunta] === seleccionada) { // Verificar con la respuesta correcta específica para cada pregunta
+                    if (correctas[pregunta] === seleccionada) {
                         cantidad_correctas++;
                     }
                 }
             }
 
             document.getElementById("resultado").innerHTML = cantidad_correctas;
+            document.getElementById("guardarRespuestasBtn").disabled = false;
+            document.getElementById("corregirBtn").disabled = true;
+        }
+
+        function guardarRespuestas() {
+            let respuestas = [];
+            for (let pregunta in opcion_elegida) {
+                if (opcion_elegida.hasOwnProperty(pregunta)) {
+                    let seleccionada = opcion_elegida[pregunta];
+                    respuestas.push({
+                        IdPrueba: @Model.IdTema,
+                        IdPregunta: parseInt(pregunta),
+                        IdOpcion: seleccionada,
+                        EsCorrecta: correctas[pregunta] === seleccionada,
+                        Confianza: niveles_confianza[pregunta] || 0
+                    });
+                }
+            }
+
+            fetch('/ExamenAlumno/GuardarRespuestas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(respuestas)
+            }).then(response => {
+                if (response.ok) {
+                    alert("Respuestas guardadas correctamente");
+                    window.location.href = "@Url.Action("Temas", "CuestionarioAlumnos")";
+
+                } else {
+                    alert("Error al guardar respuestas");
+                }
+            });
+        }
+
+        // Cerrar el modal si el usuario hace clic fuera del modal
+        window.onclick = function(event) {
+            let modal = document.getElementById("myModal");
+            if (event.target == modal) {
+                modal.classList.remove("open-popup");
+            }
         }
     </script>
 </body>

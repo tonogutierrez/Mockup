@@ -21,12 +21,13 @@ namespace FirebaseLoginAuth.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-		
-		FirebaseAuthProvider auth;
+        FirebaseAuthProvider auth;
 
-        public HomeController()
+        public HomeController(IHttpContextAccessor httpContextAccessor)
         {
+            _httpContextAccessor = httpContextAccessor;
             auth = new FirebaseAuthProvider(
                             new FirebaseConfig("AIzaSyAIqtBcJRJbGyz6rh8frHJ38GPuhBqHsMo\r\n"));
         }
@@ -84,7 +85,10 @@ namespace FirebaseLoginAuth.Controllers
                 if (token != null)
                 {
                     HttpContext.Session.SetString("_UserToken", token);
-                    HttpContext.Session.SetString("_UserEmail", loginModel.Email); // Guardar el correo electrónico del usuario
+                    //guardo el nombre del usuario durante la sesion
+                    HttpContext.Session.SetString("_UserName", loginModel.Nombre);
+                    //guardo el correo del usuario durante la sesion
+                    HttpContext.Session.SetString("_UserCorreo", loginModel.Email);
 
                     using (var connection = new SqlConnection(ConnectionHelper.GetConnectionString()))
 					{
@@ -158,7 +162,17 @@ namespace FirebaseLoginAuth.Controllers
                 if (token != null)
                 {
                     HttpContext.Session.SetString("_UserToken", token);
-                    HttpContext.Session.SetString("_UserEmail", signInModel.Email); // Guardar el correo electrónico del usuario o profesor
+
+                    // Consultar el nombre del alumno en la base de datos usando el correo electrónico
+                    string userName = GetUserNameByEmailHelper.Usuario(signInModel.Email);
+
+                    if(userName != null)
+                    {
+                        HttpContext.Session.SetString("_UserName", userName);
+                    }
+
+                    
+                    HttpContext.Session.SetString("_UserCorreo", signInModel.Email);
 
                     //Base de datos
                     using (var connection = new SqlConnection(ConnectionHelper.GetConnectionString()))
