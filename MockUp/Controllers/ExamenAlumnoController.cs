@@ -90,46 +90,6 @@ namespace MockUp.Controllers
 
 
         }
-
-        [HttpPost]
-        public IActionResult CalcularCalificacion(int idPrueba)
-        {
-            string userCorreo = HttpContext.Session.GetString("_UserCorreo"); // Recupero el correo de la sesión
-            if(string.IsNullOrEmpty(userCorreo))
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            int calificacion = 0;
-            //procedimiento para obtener la calificacion del usuario
-            using(var connection = new SqlConnection(ConnectionHelper.GetConnectionString()))
-            {
-                connection.Open();
-                using (var command = connection.CreateCommand())
-                {
-                    command.Connection = connection;
-                    command.CommandText = "dbo.CalcularCalificacion";
-                    command.CommandType = System.Data.CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@Correo", userCorreo);
-                    command.Parameters.AddWithValue("@IdPrueba", idPrueba);
-                    
-                    using(SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if(reader.Read())
-                        {
-                            calificacion = Convert.ToInt32(reader["Calificacion"]);
-                        }
-                    }
-                }
-            }
-            ViewBag.Calificacion = calificacion;
-            return RedirectToAction("Resultado", new { idPrueba = idPrueba, calificacion = calificacion });
-
-        }
-        public IActionResult Resultado(int idPrueba, int calificacion)
-        {
-            ViewBag.IdPrueba = idPrueba;
-            ViewBag.Calificacion = calificacion;
-            return View();
-        }
+       
     }
 }

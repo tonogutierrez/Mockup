@@ -6,6 +6,11 @@
     <title>Examen</title>
     <link rel="stylesheet" href="~/css/examen.css">
     <link rel="stylesheet" href="~/css/ModalWarning.css">
+    <style>
+        #guardarRespuestasBtn {
+            display: none; /* Ocultar inicialmente */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -61,7 +66,7 @@
         }
 
         <button id="corregirBtn" onclick="mostrarModal()" style="margin: 10px 10%;">CORREGIR</button>
-        <button id="guardarRespuestasBtn" onclick="guardarRespuestas()" disabled style="margin: 10px 10%;">GUARDAR RESPUESTAS</button>
+        <button id="guardarRespuestasBtn" onclick="guardarRespuestas()" style="margin: 10px 10%;">GUARDAR RESPUESTAS</button>
         <h2>Cantidad acertadas: <span id="resultado"></span></h2>
     </div>
 
@@ -125,8 +130,8 @@
             }
 
             document.getElementById("resultado").innerHTML = cantidad_correctas;
-            document.getElementById("guardarRespuestasBtn").disabled = false;
-            document.getElementById("corregirBtn").disabled = true;
+            document.getElementById("guardarRespuestasBtn").style.display = "inline-block"; // Mostrar el botón "GUARDAR RESPUESTAS"
+            document.getElementById("corregirBtn").style.display = "none"; // Ocultar el botón "CORREGIR"
         }
 
         function guardarRespuestas() {

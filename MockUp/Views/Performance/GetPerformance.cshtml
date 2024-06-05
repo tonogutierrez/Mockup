@@ -1,16 +1,16 @@
-﻿@using MockUp.Models
-@model IEnumerable<TemasModel>
+﻿@model MockUp.Models.Grafica
 
+@* <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Chart</title> *@
+    <script src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+    <script src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.candy.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="~/css/cuadroDeTemas.css">
-
-</head>
 
 <body style="background-color: #cee4fc">
-    
     <nav class="bg-gray-800">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="relative flex h-16 items-center justify-between">
@@ -44,7 +44,7 @@
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-4">
                             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                            
+
                             <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" onclick="window.location='MisAlumnos'">Mis Alumnos</a>
                             <a href="#" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page" onclick="window.location='/Cuestionario'">Temas</a>
                             <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Resultados</a>
@@ -122,37 +122,86 @@
             });
         });
     </script>
-                                                    <!--FIN DEL MENU-->
-                                                    <!--FIN DEL MENU-->                                    
-    
-    
-    <div class="contenedor"> 
-        <div class="column" style="background-color:#cee4fc;flex-grow: 1">
-            
-            <div class="flex flex-wrap -m-3" style="max-width:90%;margin:0 auto ">
-                
-                @foreach (var item in Model)
-                {
-                    <div class="w-full sm:w-1/2 md:w-1/3 flex flex-col p-3" style="width:">
-                        <div class="bg-white rounded-lg shadow-lg overflow-hidden flex-1 flex flex-col">
-                            <div class="bg-cover h-48" style="background: url(@item.LinkImagen); background-repeat:no-repeat;background-position:center"></div>
-                            <div class="p-4 flex-1 flex flex-col" style="">
-                                <h3 class="mb-4 text-2xl">@item.Tema</h3>
-                                <div class="cta-container transition" onclick="window.location.href = '@Url.Action("PreguntasExamen", "PreguntasExamen", new { idTema = @item.IdTema, nombreTema = @item.Tema })'">
-                                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                                        Observar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
 
-            </div>
+    <div class ="contenedor">
+
+        <div class="column" style="background-color:#cee4fc;flex-grow: 1">
+            <div id="chart-container" style="display: flex; justify-content:center; margin: 100px" ></div>
+            <!-- Hidden field to store the performance value -->
+            <input type="hidden" id="performanceValue" value="@Model.Performance" />
+
         </div>
     </div>
-    @section scripts {
-        <script src="@Url.Content("~/js/ChatBot/Chatbot.js")"></script>
+</body>
+
+    @section Scripts {
+        <script>
+        const performanceValue = document.getElementById('performanceValue').value;
+                const dataSource = {
+        chart: {
+          caption: "Resultados del alumno",
+          //subcaption: "Current week - Garden Groove Harbour",
+          theme: "candy",
+          showvalue: "0",
+          pointerbghovercolor: "#ffffff",
+          pointerbghoveralpha: "80",
+          pointerhoverradius: "10",
+          showborderonhover: "1",
+          pointerborderhovercolor: "#333333",
+          pointerborderhoverthickness: "2",
+          showtickmarks: "0",
+          numbersuffix: "%"
+        },
+        colorrange: {
+          color: [
+            {
+              minvalue: "0",
+              maxvalue: "4",
+              label: "Low",
+              code: "#e44a00"
+            },
+            {
+              minvalue: "4",
+              maxvalue: "7",
+              label: "Moderate",
+              code: "#f8bd19"
+            },
+            {
+              minvalue: "7",
+              maxvalue: "10",
+              label: "High",
+              code: "#6baa01"
+            }
+          ]
+        },
+        pointers: {
+          pointer: [
+            {
+              value: performanceValue,
+              tooltext: "Performance $datavalue  "
+            }
+          ]
+        }
+      };
+  
+      FusionCharts.ready(function() {
+        var myChart = new FusionCharts({
+          type: "hlineargauge",
+          renderAt: "chart-container",
+          width: "50%",
+          height: "50%",
+          dataFormat: "json",
+          dataSource
+        }).render();
+      });
+
+        </script>
     }
+@* </head>
+<body>
+
+    <div id="chart-container"></div>
 
 </body>
+</html>
+ *@

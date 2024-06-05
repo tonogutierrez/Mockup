@@ -1,12 +1,17 @@
 ﻿@using MockUp.Models;
 @model IEnumerable<Class>;
 
-<!doctype html>
+
 <html>
+<head>
+    <link rel="stylesheet" href="~/css/tabla.css">
+    <!-- Incluir CSS de Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
 <body style="background-color: #cee4fc">
     @Html.Partial("../_MiMenu")
     
-    <link rel="stylesheet" href="~/css/tabla.css">
+    
     <div class="contenedor">
         <h2 class ="font-extrabold text-7xl"style= "margin: 10px 70px 70px; margin-top:50px">Mis Alumnos</h2>
         <div class="table-wrapper">
@@ -16,6 +21,7 @@
                                 <th>Nombre </th>
                                 <th>Apellido Paterno</th>
                                 <th>Apellido Materno</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -25,14 +31,39 @@
                                     <td>@item.Nombre</td>
                                     <td>@item.ApellidoPaterno</td>
                                     <td>@item.ApellidoMaterno</td>
+                                   
+                                    <td>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Resultados
+                                            </button>
+                                            <div class="dropdown-menu">
+
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item"><b>Escoja una prueba</b></a>
+                                                <a class="dropdown-item" href="@Url.Action("GetPerformance","Performance", new {idUsuario = item.IdUsuario, idPrueba = 1})">Matematicas</a>
+                                                <a class="dropdown-item" href="@Url.Action("GetPerformance","Performance", new {idUsuario = item.IdUsuario, idPrueba = 2})">Biologia</a>
+                                                <a class="dropdown-item" href="@Url.Action("GetPerformance","Performance", new {idUsuario = item.IdUsuario, idPrueba = 3})">Historia</a>
+                                                <a class="dropdown-item" href="@Url.Action("GetPerformance","Performance", new {idUsuario = item.IdUsuario, idPrueba = 4})">Geografia</a>
+                                                
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
 
                                 </tr>
                             }
+
+                                
                         </tbody>
                 </table>
           </div>
         
     </div>
+    <!-- Incluir jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Incluir JavaScript de Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     @section scripts {
         <script src="@Url.Content("~/js/ChatBot/Chatbot.js")"></script>
     }
