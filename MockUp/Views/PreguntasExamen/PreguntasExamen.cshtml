@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <link rel="stylesheet" href="~/css/tabla.css">
 
 </head>
 
@@ -46,8 +46,7 @@
 
                             <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" onclick="window.location.href='@Url.Action("MisAlumnos", "MisAlumnos")'">Mis Alumnos</a>
                             <a href="#" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page" onclick="window.location='Cuestionario'">Temas(Observar)</a>
-                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Resultados</a>
-                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Juego</a>
+                            
                         </div>
                     </div>
                 </div>
@@ -123,7 +122,7 @@
     </script>
     <!--FIN DEL MENU-->
     <!--FIN DEL MENU-->
-    <link rel="stylesheet" href="~/css/tabla.css">
+    
     <h2 class="text-5xl" style="margin: 10px 70px 70px; margin-top:50px">Preguntas de @Model.NombreTema</h2>
     <div class="contenedor">
 
@@ -152,6 +151,8 @@
                 </tbody>
             </table>
         </div>
+        <!-- Boton para regresarse a cuestionario-->
+        <button type="button" class="btn btn-primary" onclick="window.location.href='@Url.Action("Cuestionario", "Cuestionario")'" style="margin: 10px 70px 10px;">Regresar</button>
 
     </div>
     @section scripts {

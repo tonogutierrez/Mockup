@@ -13,7 +13,10 @@ namespace MockUp.Controllers
         [Route("/Examen/{idTema}")]
         public IActionResult Examen(int idTema)
         {
+            string userCorreo = HttpContext.Session.GetString("_UserCorreo"); // Recupero el correo de la sesión
             List<Models.Examen> listaExamen = new List<Models.Examen>(); //Inicio modelo del examen(preguntas y respuestas)
+            int? calificacion = null;
+
             using(var connection = new SqlConnection(ConnectionHelper.GetConnectionString())) //Me conecto a la base de datos
             {
                 connection.Open();
@@ -24,9 +27,18 @@ namespace MockUp.Controllers
                     command.CommandText = "dbo.ExamenAlumno";
                     command.CommandType = System.Data.CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@IdTema", idTema); //Parametro de sql 
+                    command.Parameters.AddWithValue("@Correo", userCorreo);
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
+                        while (reader.Read())
+                        {
+                            
+                           calificacion = reader["Calificacion"] != DBNull.Value ? (int?)Convert.ToInt32(reader["Calificacion"]) : null;
+                        }
+
+
+                        reader.NextResult(); //lee otro select
                         while (reader.Read())
                         {
                             //Leo el select de storedProcedure
@@ -36,6 +48,9 @@ namespace MockUp.Controllers
                             examen.IdPregunta = Convert.ToInt32(reader["IdPregunta"]);
                             examen.IdOpcion = Convert.ToInt32(reader["IdOpcion"]);
                             examen.EsCorrecta = reader.GetBoolean(reader.GetOrdinal("EsCorrecta"));
+                            //Para que reciba DBNull 
+                            examen.OpcionResp = reader["OpcionResp"] != DBNull.Value ? (int?)Convert.ToInt32(reader["OpcionResp"]) : null;
+                            examen.Confianza = reader["Confianza"] != DBNull.Value ? (int?)Convert.ToInt32(reader["Confianza"]) : null;
 
                             //Guardo el objeto a una lista
                             listaExamen.Add(examen);
@@ -48,6 +63,7 @@ namespace MockUp.Controllers
             var model = new ExamenViewModel
             {
                 IdTema = idTema,
+                Calificacion = calificacion,
                 Examen = listaExamen
             };
 

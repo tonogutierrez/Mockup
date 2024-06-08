@@ -21,6 +21,8 @@
         @{
             int? currentIdPregunta = null;
             var correctas = new Dictionary<int, int>();
+            var respuestas = new Dictionary<int, int?>();
+            var confianzas = new Dictionary<int, int?>();
         }
 
         @foreach (var examen in Model.Examen)
@@ -31,21 +33,26 @@
                 {
                     @:<div>
                         <label style="text-align:center; font-weight: bold;">Nivel de confianza:</label>
-                        <label><input type="radio" name="confianza_@currentIdPregunta" value="1" onclick="seleccionarConfianza(@currentIdPregunta, 1)" />Baja</label>
-                        <label><input type="radio" name="confianza_@currentIdPregunta" value="2" onclick="seleccionarConfianza(@currentIdPregunta, 2)" />Media</label>
-                        <label><input type="radio" name="confianza_@currentIdPregunta" value="3" onclick="seleccionarConfianza(@currentIdPregunta, 3)" />Alta</label>
+                        @for (int i = 1; i <= 3; i++)
+                        {
+                            <label>
+                                <input type="radio" name="confianza_@currentIdPregunta" value="@i" onclick="seleccionarConfianza(@currentIdPregunta, @i)" @(confianzas[currentIdPregunta.Value] == i ? "checked" : "") /> @(i == 1 ? "Baja" : i == 2 ? "Media" : "Alta")
+                            </label>
+                        }
                     @:</div>
                     @:</section>
                 }
 
                 currentIdPregunta = examen.IdPregunta;
+                respuestas[currentIdPregunta.Value] = examen.OpcionResp;
+                confianzas[currentIdPregunta.Value] = examen.Confianza;
 
                 @:<section id="p@examen.IdPregunta">
                 @:<h3>@examen.IdPregunta - @examen.DescPregunta</h3>
             }
 
             @:<label class="opcion" data-pregunta="@examen.IdPregunta">
-            @:<input type='radio' value='@examen.IdOpcion' name='@examen.IdPregunta' data-correcta='@examen.EsCorrecta' onclick='respuesta(@examen.IdPregunta, this)' />@examen.DescRespuesta
+            @:<input type='radio' value='@examen.IdOpcion' name='@examen.IdPregunta' data-correcta='@examen.EsCorrecta' onclick='respuesta(@examen.IdPregunta, this)' @(respuestas[examen.IdPregunta] == examen.IdOpcion ? "checked" : "") />@examen.DescRespuesta
             @:</label>
 
             if (examen.EsCorrecta)
@@ -58,32 +65,43 @@
         {
             @:<div>
                 <label style="text-align:center; font-weight: bold;">Nivel de confianza:</label>
-                <label><input type="radio" name="confianza_@currentIdPregunta" value="1" onclick="seleccionarConfianza(@currentIdPregunta, 1)" />Baja</label>
-                <label><input type="radio" name="confianza_@currentIdPregunta" value="2" onclick="seleccionarConfianza(@currentIdPregunta, 2)" />Media</label>
-                <label><input type="radio" name="confianza_@currentIdPregunta" value="3" onclick="seleccionarConfianza(@currentIdPregunta, 3)" />Alta</label>
+                @for (int i = 1; i <= 3; i++)
+                {
+                    <label>
+                        <input type="radio" name="confianza_@currentIdPregunta" value="@i" onclick="seleccionarConfianza(@currentIdPregunta, @i)" @(confianzas[currentIdPregunta.Value] == i ? "checked" : "") /> @(i == 1 ? "Baja" : i == 2 ? "Media" : "Alta")
+                    </label>
+                }
             @:</div>
             @:</section>
         }
 
-        <button id="corregirBtn" onclick="mostrarModal()" style="margin: 10px 10%;">CORREGIR</button>
-        <button id="guardarRespuestasBtn" onclick="guardarRespuestas()" style="margin: 10px 10%;">GUARDAR RESPUESTAS</button>
-        <h2>Cantidad acertadas: <span id="resultado"></span></h2>
+        @if (Model.Calificacion == null)
+        {
+            <button id="corregirBtn" onclick="mostrarModal()" style="margin: 10px 10%;">Calificar</button>
+            <button id="guardarRespuestasBtn" onclick="guardarRespuestas()" style="margin: 10px 10%;">GUARDAR RESPUESTAS</button>
+            <h2>Cantidad acertadas: <span id="resultado"></span></h2>
+        }
+        else
+        {
+            <button id="corregirBtn"  onclick ="window.location.href='@Url.Action("Temas", "CuestionarioAlumnos")'"style="margin: 10px 10%;">Regresar</button>
+        }
+
+        
     </div>
 
     <!-- Modal -->
     <div id="myModal" class="popup">
-        
         <img src="~/imagenes/warning.png" alt="Warning">
-        <h2>Confirmar Corrección</h2>
-        <p>¿Estás seguro de que deseas corregir las respuestas? No podrás modificar las respuestas después de esto.</p>
-        <button onclick="confirmarCorregir()">Sí, corregir</button>
+        <h2>Confirmar</h2>
+        <p>¿Estás seguro de que deseas confirmar las respuestas? No podrás modificar las respuestas después de esto.</p>
+        <button onclick="confirmarCorregir()">Sí, confirmar</button>
         <button class="cancel-btn" onclick="cerrarModal()">Cancelar</button>
     </div>
 
     <script>
         let correctas = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(correctas));
-        let opcion_elegida = {};
-        let niveles_confianza = {};
+        let opcion_elegida = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(respuestas));
+        let niveles_confianza = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(confianzas));
         let cantidad_correctas = 0;
         let userCorreo = "@ViewBag.UserCorreo";
 
@@ -103,12 +121,12 @@
             niveles_confianza[num_pregunta] = confianza;
         }
 
-        //Boton para abrir el modal
+        // Botón para abrir el modal
         function mostrarModal() {
-            document.getElementById("myModal").classList.add("open-popup"); 
+            document.getElementById("myModal").classList.add("open-popup");
         }
-        
-        //function para cerrar modal
+
+        // Función para cerrar el modal
         function cerrarModal() {
             document.getElementById("myModal").classList.remove("open-popup");
         }
@@ -159,7 +177,6 @@
                 if (response.ok) {
                     alert("Respuestas guardadas correctamente");
                     window.location.href = "@Url.Action("Temas", "CuestionarioAlumnos")";
-
                 } else {
                     alert("Error al guardar respuestas");
                 }

@@ -39,6 +39,8 @@ namespace MockUp.Controllers
                             pregunta.DescPregunta = reader["DescPregunta"].ToString();
                             pregunta.IdPregunta = Convert.ToInt32(reader["IdPregunta"]);
                             pregunta.IdPrueba = Convert.ToInt32(reader["IdPrueba"]);
+                            pregunta.IdTema = Convert.ToInt32(reader["IdTema"]);
+                            pregunta.NombreTema = reader["Tema"].ToString();
                         }
 
                         reader.NextResult(); //lee otro select
@@ -56,16 +58,18 @@ namespace MockUp.Controllers
                 }
                 connection.Close();
             }
+
             var model = new Pregunta
             {
                 IdPregunta = idPregunta,
                 IdPrueba = idPrueba,
                 DescPregunta = pregunta.DescPregunta,
-                Respuestas = opcionRespuesta
-
+                Respuestas = opcionRespuesta,
+                IdTema = pregunta.IdTema,
+                NombreTema = pregunta.NombreTema
             };
-            
-            
+
+
             return View(model);
 
             
@@ -86,6 +90,7 @@ namespace MockUp.Controllers
                     command.Connection = connection;
                     command.CommandText = "dbo.ModificarPreguntasYRespuestas";//storedprocedured para modificar las preguntas y respuestas
                     command.CommandType = System.Data.CommandType.StoredProcedure;
+                    //Parametros necesarios para el stored procedure 
                     command.Parameters.AddWithValue("@IdPrueba", idPrueba);
                     command.Parameters.AddWithValue("@IdPregunta", idPregunta);
                     command.Parameters.AddWithValue("@DescPregunta", descPregunta);

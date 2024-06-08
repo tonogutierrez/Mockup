@@ -3,6 +3,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="~/css/tabla.css">
+    <link rel="stylesheet" href="~/css/modalDeSuccess.css">
 </head>
 
 <body style="background-color:#cee4fc">
@@ -30,8 +32,7 @@
                         <div class="flex space-x-4">
                             <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" onclick="window.location.href='@Url.Action("MisAlumnos", "MisAlumnos")'">Mis Alumnos</a>
                             <a href="#" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page" onclick="window.location='/Cuestionario'">Temas(Respuestas)</a>
-                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Resultados</a>
-                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Juego</a>
+                            
                         </div>
                     </div>
                 </div>
@@ -89,8 +90,7 @@
         });
     </script>
     @Html.Partial("../ChatBot")
-    <link rel="stylesheet" href="~/css/tabla.css">
-    <link rel="stylesheet" href="~/css/modalDeSuccess.css">
+
 
     <div class="contenedor">
         <form id="editForm" method="post" action="@Url.Action("ModificarPreguntasYRespuestas", "ObservarRespuestas")">
@@ -105,7 +105,9 @@
                     int contador = 1;
                 }
             <div class="table-wrapper">
-                    <label for="validationCustom03" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Respuesta</label>
+                <div class="contenido_tabla" style="box-shadow: none !important;">
+                    <label for="validationCustom03" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black" style="box-shadow: none !important;">Respuesta</label>
+                </div>
                     <table class="fl-table">
                         <thead>
                             <tr>
@@ -144,7 +146,7 @@
             <script src="@Url.Content("~/js/ChatBot/Chatbot.js")"></script>
         }
     </div>
-
+    <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("PreguntasExamen", "PreguntasExamen", new{ idTema=Model.IdTema, nombreTema=Model.NombreTema})'" style="margin: 10px 70px 10px">Regresar</button>
     <script>
         let popup = document.getElementById("popup");
 
