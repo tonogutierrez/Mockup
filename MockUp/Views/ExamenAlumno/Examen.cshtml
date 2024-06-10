@@ -64,6 +64,7 @@
         @if (currentIdPregunta != null)
         {
             @:<div>
+
                 <label style="text-align:center; font-weight: bold;">Nivel de confianza:</label>
                 @for (int i = 1; i <= 3; i++)
                 {
@@ -91,7 +92,7 @@
 
     <!-- Modal -->
     <div id="myModal" class="popup">
-        <img src="~/imagenes/warning.png" alt="Warning">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Warning.svg/2219px-Warning.svg.png" alt="Warning">
         <h2>Confirmar</h2>
         <p>¿Estás seguro de que deseas confirmar las respuestas? No podrás modificar las respuestas después de esto.</p>
         <button onclick="confirmarCorregir()">Sí, confirmar</button>

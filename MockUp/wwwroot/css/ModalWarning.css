@@ -26,8 +26,8 @@
 .popup img {
     width: 100px;
     margin: 20px auto;
-    border-radius: 50px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    /*border-radius: 50px;*/
+    /*box-shadow: 0 2px 5px rgba(0,0,0,0.2);*/
 }
 
 .popup h2 {
